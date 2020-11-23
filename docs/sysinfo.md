@@ -3,7 +3,15 @@
 ## Common Linux Commands
 
 ```shell
-# RAM
+# get operating system info (any of the commands below)
+cat /etc/os-release
+lsb_release -a
+hostnamectl
+
+# get linux kernel version
+uname -r
+
+# get free RAM
 free -m
 
 # Disk
@@ -27,7 +35,14 @@ ibv_devinfo
 ibstat
 ibstatus
 
+# check if hyperthreading is enabled
+dmidecode -t processor | grep HTT
+
 ```
+
+## More info in /proc
+
+## More info in /sys
 
 ## Scripts
 

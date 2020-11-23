@@ -44,6 +44,6 @@ pip install --no-cache-dir --user horovod
 
 I built and installed horovod in the docker container `nvcr.io/nvidia/pytorch:latest` and it will install horovod to `/home/users/ntu/c170166/.local/lib/python3.6/site-packages` and horovodrun bin is in `/home/users/ntu/c170166/.local/bin`. By running `horovodrun --check build`, you should see the installation is successful.
 
-### IMPORTANT
+#### IMPORTANT
 
 The horovod and pytorch will remain even if you exit from the container as they are installed in the user's directory instead of container's site-package directory. Thus, you do not need to re-install when you start a new container. However, this might cause an issue if you use an image of different version. For example, you build horovod with a CUDA-10.2 but run horovod-based code on another CUDA-9 image and this might give you an error which I cannot foresee.

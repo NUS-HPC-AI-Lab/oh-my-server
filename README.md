@@ -1,6 +1,6 @@
 # oh-my-server
 
-This repository aims to provide some guide on creating and managing your own server and cluster. It includes some personal debugging experiences on different HPC systems as well.
+This repository aims to provide some guidance on creating and managing your own server and cluster. It includes some personal debugging experiences on different HPC systems as well.
 
 ## Quick Reference
 

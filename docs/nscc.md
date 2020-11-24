@@ -14,36 +14,52 @@ If you want to debug your code or run many short experiments with exclusive GPU 
 
 ## Horovod
 
-If you are using TensorFlow, you can use docker/singularity image directly as Horovod is pre-installed.
-
-If you are using PyTorch, you need to install horovod manually. To install horovod on NSCC, you need to build NCCL first. (I didn't find the path to NCCL on NSCC, thus I decided to build on my own. Please tell me if you find the path to nccl). **I conducted all the steps below within the container `nscc-docker run -t nvcr.io/nvidia/pytorch:latest` as the python outside is of verison 2.7. You might be able to install outside container with conda but I never tested this method.**
-
-```shell
-cd <NEW_PATH_FOR_NCCL>
-git clone https://github.com/NVIDIA/nccl.git
-cd ./nccl
-make src.build CUDA_HOME=/usr/local/cuda
-```
-
-Next, you need to install pytorch to your local directory. I did not test other versions of pytorch, but as long as you install with `--user` and the version is higher than the pre-installed pytorch version, it should be fine. (This is because horovod cannot be built with the pre-installed pytorch of the image for some unknown reason (perhaps permission error), so we need to have our own pytorch.)
-
-```shell
-pip install --user torch==1.7 torchvision==0.8
-```
-
-Next, you need to install horovod with the following script.
+To install Horovod on NSCC, just run the following script in the container. I used Singularity as it is more sutiable for multinode training.
 
 ```shell
 #!/bin/bash
 
-export HOROVOD_NCCL_HOME=/home/users/ntu/c170166/local/nccl/nccl/build
+export HOROVOD_NCCL_INCLUDE_=/usr/include
+export HOROVOD_NCCL_LIB=/usr/lib/x86_64-linux-gnu
+export HOROVOD_NCCL_LINK=SHARED
+
 export HOROVOD_GPU_ALLREDUCE=NCCL
 export HOROVOD_WITH_PYTORCH=1
-pip install --no-cache-dir --user horovod
+pip install --no-cache-dir --user  horovod==0.18.2
 ```
 
-I built and installed horovod in the docker container `nvcr.io/nvidia/pytorch:latest` and it will install horovod to `/home/users/ntu/c170166/.local/lib/python3.6/site-packages` and horovodrun bin is in `/home/users/ntu/c170166/.local/bin`. By running `horovodrun --check build`, you should see the installation is successful.
-
-#### IMPORTANT
-
-The horovod and pytorch will remain even if you exit from the container as they are installed in the user's directory instead of container's site-package directory. Thus, you do not need to re-install when you start a new container. However, this might cause an issue if you use an image of different version. For example, you build horovod with a CUDA-10.2 but run horovod-based code on another CUDA-9 image and this might give you an error which I cannot foresee.
+> **Deprecated**
+>
+> > If you are using TensorFlow, you can use docker/singularity image directly as Horovod is pre-installed.
+> >
+> > If you are using PyTorch, you need to install horovod manually. To install horovod on NSCC, you need to build NCCL first. (I didn't find the path to NCCL on NSCC, thus I decided to build on my own. Please tell me if you find the path to nccl). **I conducted all the steps below within the container `nscc-docker run -t nvcr.io/nvidia/pytorch:latest` as the python outside is of verison 2.7. You might be able to install outside container with conda but I never tested this method.**
+> >
+> > ```shell
+> > cd <NEW_PATH_FOR_NCCL>
+> > git clone https://github.com/NVIDIA/nccl.git
+> > cd ./nccl
+> > make src.build CUDA_HOME=/usr/local/cuda
+> > ```
+> >
+> > Next, you need to install pytorch to your local directory. I did not test other versions of pytorch, but as long as you install with `--user` and the version is higher than the pre-installed pytorch version, it should be fine. (This is because horovod cannot be built with the pre-installed pytorch of the image for some unknown reason (perhaps permission error), so we need to have our own pytorch.)
+> >
+> > ```shell
+> > pip install --user torch==1.7 torchvision==0.8
+> > ```
+> >
+> > Next, you need to install horovod with the following script.
+> >
+> > ```shell
+> > #!/bin/bash
+> >
+> > export HOROVOD_NCCL_HOME=/home/users/ntu/c170166/local/nccl/nccl/build
+> > export HOROVOD_GPU_ALLREDUCE=NCCL
+> > export HOROVOD_WITH_PYTORCH=1
+> > pip install --no-cache-dir --user horovod
+> > ```
+> >
+> > I built and installed horovod in the docker container `nvcr.io/nvidia/pytorch:latest` and it will install horovod to `/home/users/ntu/c170166/.local/lib/python3.6/site-packages` and horovodrun bin is in `/home/users/ntu/c170166/.local/bin`. By running `horovodrun --check build`, you should see the installation is successful.
+> >
+> > #### IMPORTANT
+> >
+> > The horovod and pytorch will remain even if you exit from the container as they are installed in the user's directory instead of container's site-package directory. Thus, you do not need to re-install when you start a new container. However, this might cause an issue if you use an image of different version. For example, you build horovod with a CUDA-10.2 but run horovod-based code on another CUDA-9 image and this might give you an error which I cannot foresee.

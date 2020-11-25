@@ -115,4 +115,17 @@ The container environment will use its own Python by default. However, you may n
 1. Run `python -m site`. You can see the directories where Python searches for libraries during `import` in the `sys.path`.
 2. If you find that the directory where your libraries are installed are not in the `sys.path`, you can `export PYTHONPATH=<YOUR_PATH>:$PYTHONPATH`. For example, Horovod is installed in the `/home/users/ntu/c170166/.local/lib/python3.6/site-packages`, but for reason, Python cannot find Horovod during import. I can run `export PYTHONPATH=/home/users/ntu/c170166/.local/lib/python3.6/site-packages:$PYTHONPATH`. Now, you should be able to import Horovod as normal.
 
-> You can also add `sys.path.insert(0, '/home/users/ntu/c170166/.local/lib/python3.6/site-packages')` in your python file instead of exporting the environment for step 2.
+> You can also add `sys.path.insert(0, '/home/users/ntu/c170166/.local/lib/python3.6/site-packages')` in your python file instead of exporting the environment variable for step 2.
+
+## Job Status Monitoring
+
+It is tedious to constantly check whether your job has started running. I wrote a simple email alert script which will send an email to you once your sepcified job has started running. This is more suitable if you are running Jupyter. Follow the following steps to set up this simple alert system on your NSCC account.
+
+1. Log in by `ssh <username>@nus.nscc.sg`
+2. Change to NSCC nodes by `ssh nscc04-ib0`. This is becauase NTU and NUS nodes cannot send data to outside internet.
+3. Clone `monitor.sh` and `nscc_monitor.py` from [monitor_job](https://github.com/FrankLeeeee/oh-my-server/blob/main/scripts/nscc/monitor_job)to your home directory
+4. Edit the `nscc_monitor.py` with your email account and STMP authorization key.
+5. Change the path to Anaconda and `nscc_monitor.py` in `monitor.sh`
+6. Run `nohup bash ./monitor.sh <JOB_ID> <RECEIVER_EMAIL> <INTERVAL> > ./nohup.log 2>&1 &`
+
+The `nohup` command will run in the background even if you exit from your terminal. This will produce two output files, one is `nohup.log` and `monitor_<job_id>.log`. `monitor_<job_id>.log` will show you the status of the script. `<INTERVAL>` is set to be 600 by default which means it will check the status of the job every 10 min.

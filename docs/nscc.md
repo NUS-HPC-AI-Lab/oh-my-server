@@ -7,7 +7,7 @@
 - [Horovod](#horovod)
 - [Container](#container)
 - [Python Package Management](#python-package-management)
-- [Job Status Monitoring](#job-status-monitoring)
+- [Job Status Email Alert](#job-status-email-alert)
 
 ## Common Commands
 
@@ -60,7 +60,9 @@ If you want to debug your code or run many short experiments with exclusive GPU 
 
 ## Horovod
 
-To install Horovod on NSCC, just run the following script in the container. I used Singularity as it is more sutiable for multinode training.
+If you are using TensorFlow, you can use docker/singularity image directly as Horovod is pre-installed.
+
+If you are using PyTorch, you need to install horovod manually. To install Horovod on NSCC, just run the following script in the container. I used Singularity as it is more sutiable for multinode training.
 
 ```shell
 #!/bin/bash
@@ -76,9 +78,7 @@ pip install --no-cache-dir --user  horovod==0.18.2
 
 > **Deprecated**
 >
-> > If you are using TensorFlow, you can use docker/singularity image directly as Horovod is pre-installed.
-> >
-> > If you are using PyTorch, you need to install horovod manually. To install horovod on NSCC, you need to build NCCL first. (I didn't find the path to NCCL on NSCC, thus I decided to build on my own. Please tell me if you find the path to nccl). **I conducted all the steps below within the container `nscc-docker run -t nvcr.io/nvidia/pytorch:latest` as the python outside is of verison 2.7. You might be able to install outside container with conda but I never tested this method.**
+> > To install horovod on NSCC, you need to build NCCL first. (I didn't find the path to NCCL on NSCC, thus I decided to build on my own. Please tell me if you find the path to nccl). **I conducted all the steps below within the container `nscc-docker run -t nvcr.io/nvidia/pytorch:latest` as the python outside is of verison 2.7. You might be able to install outside container with conda but I never tested this method.**
 > >
 > > ```shell
 > > cd <NEW_PATH_FOR_NCCL>
@@ -126,7 +126,7 @@ The container environment will use its own Python by default. However, you may n
 
 > You can also add `sys.path.insert(0, '/home/users/ntu/c170166/.local/lib/python3.6/site-packages')` in your python file instead of exporting the environment variable for step 2.
 
-## Job Status Monitoring
+## Job Status Email Alert
 
 It is tedious to constantly check whether your job has started running. I wrote a simple email alert script which will send an email to you once your sepcified job has started running. This is more suitable if you are running Jupyter. Follow the following steps to set up this simple alert system on your NSCC account.
 

@@ -132,7 +132,7 @@ It is tedious to constantly check whether your job has started running. I wrote 
 
 1. Log in by `ssh <username>@nus.nscc.sg`
 2. Change to NSCC nodes by `ssh nscc04-ib0`. This is becauase NTU and NUS nodes cannot send data to outside internet.
-3. Clone `monitor.sh` and `nscc_monitor.py` from [monitor_job](https://github.com/FrankLeeeee/oh-my-server/blob/main/scripts/nscc/monitor_job)to your home directory
+3. Clone `monitor.sh` and `nscc_monitor.py` from [monitor_job](https://github.com/FrankLeeeee/oh-my-server/blob/main/scripts/nscc/monitor_job) to your home directory
 4. Edit the `FROM_ADDR` and `PASSWORD` in `nscc_monitor.py` with your email account and STMP authorization key.
 5. Change the path to Anaconda and `nscc_monitor.py` in `monitor.sh`
 6. Run `nohup bash ./monitor.sh <JOB_ID> <RECEIVER_EMAIL> <INTERVAL> > ./nohup.log 2>&1 &`

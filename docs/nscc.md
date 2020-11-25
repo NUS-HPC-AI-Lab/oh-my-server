@@ -1,5 +1,41 @@
 # NSCC
 
+## Common Commands
+
+```shell
+# submit interactive job
+qsub -I -q dgx-dev -l walltime=3:00:00 -P <PROJECT_ID>
+
+# submit a job script
+qsub /PATH/TO/job.pbs
+
+# check your job status
+qstat
+
+# view job info
+qstat -f 2603175.wlm01
+
+# delete your job
+qdel 2603175.wlm01
+
+# view job queue
+gstat -dgx
+
+# run interactive containers
+nscc-docker run -t nvcr.io/nvidia/pytorch
+singularity run pytorch\:latest.sif
+
+# run container with executable
+nscc-docker run nvcr.io/nvidia/pytorch <PATH_TO_EXECUTABLE>
+singularity run pytorch\:latest.sif <PATH_TO_EXECUTABLE>
+
+```
+
+> Some default options are added automatically for nscc-docker run
+>
+> > -u UID:GID --group-add GROUP –v /home:/home –v /raid:/raid -v /scratch:/scratch --rm –i --ulimit memlock=-1 --ulimit stack=67108864
+> > If --ipc=host is not specified then the following option is also added: --shm-size=1g
+
 ## Jupyter Lab
 
 If you want to debug your code or run many short experiments with exclusive GPU resources, you can launch a jupyter lab on the NSCC server. The procedure is as follows:
@@ -63,3 +99,10 @@ pip install --no-cache-dir --user  horovod==0.18.2
 > > #### IMPORTANT
 > >
 > > The horovod and pytorch will remain even if you exit from the container as they are installed in the user's directory instead of container's site-package directory. Thus, you do not need to re-install when you start a new container. However, this might cause an issue if you use an image of different version. For example, you build horovod with a CUDA-10.2 but run horovod-based code on another CUDA-9 image and this might give you an error which I cannot foresee.
+
+## Container
+
+NSCC provides both Singularity and Docker containers. The containers used mostly are NGC contianers. The Singularity ones are obtained by converting Docker image to Singularity image. Some points that I have observed are that:
+
+1. You do not have root access in both Docker and Singularity container.
+2. `singularity shell xxx.sif` behaves interestingly different from `singularity run xxx.sif`. Even though both will start bash as the default shell, `singularity shell` does not source your bashrc file while `singularity run` actually does. So your init script in bashrc will be omitted when you execute `singularity shell`. It is desgined to be so and look at https://github.com/hpcng/singularity/issues/643 for more info.

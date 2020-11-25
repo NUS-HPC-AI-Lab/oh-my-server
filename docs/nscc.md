@@ -107,3 +107,12 @@ NSCC provides both Singularity and Docker containers. The containers used mostly
 
 1. You do not have root access in both Docker and Singularity container.
 2. `singularity shell xxx.sif` behaves interestingly different from `singularity run xxx.sif`. Even though both will start bash as the default shell, `singularity shell` does not source your bashrc file while `singularity run` actually does. So your init script in bashrc will be omitted when you execute `singularity shell`. It is desgined to be so and look at https://github.com/hpcng/singularity/issues/643 for more info.
+
+## Python Package Management
+
+The container environment will use its own Python by default. However, you may need some extra libraries which are not provided in the container. For exmaple, you may need Horovod when you run with PyTorch container. You cannot install these libraries in the /opt/conda folder as it is read-only due to the lack of root access. You may have your libraries installed in the user default site-packages directory or your own Anaconda directory. You can go through the following steps to check if you have access to your own installed library in the container.
+
+1. Run `python -m site`. You can see the directories where Python searches for libraries during `import` in the `sys.path`.
+2. If you find that the directory where your libraries are installed are not in the `sys.path`, you can `export PYTHONPATH=<YOUR_PATH>:$PYTHONPATH`. For example, Horovod is installed in the `/home/users/ntu/c170166/.local/lib/python3.6/site-packages`, but for reason, Python cannot find Horovod during import. I can run `export PYTHONPATH=/home/users/ntu/c170166/.local/lib/python3.6/site-packages:$PYTHONPATH`. Now, you should be able to import Horovod as normal.
+
+> You can also add `sys.path.insert(0, '/home/users/ntu/c170166/.local/lib/python3.6/site-packages')` in your python file instead of exporting the environment for step 2.

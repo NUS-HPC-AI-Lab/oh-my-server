@@ -34,6 +34,7 @@ singularity run pytorch\:latest.sif <PATH_TO_EXECUTABLE>
 > Some default options are added automatically for nscc-docker run
 >
 > > -u UID:GID --group-add GROUP –v /home:/home –v /raid:/raid -v /scratch:/scratch --rm –i --ulimit memlock=-1 --ulimit stack=67108864
+> >
 > > If --ipc=host is not specified then the following option is also added: --shm-size=1g
 
 ## Jupyter Lab

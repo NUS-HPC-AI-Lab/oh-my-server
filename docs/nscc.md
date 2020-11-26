@@ -142,38 +142,56 @@ This script will run with Python 3.8. If you have lower Python3 version, you mig
 
 ## Multinode Experiments
 
-I would suggest to run Jupyter Lab instead of direct execution of your script as it takes a long time to queue for multinode resources and it is difficult to debug. To run experiments on multinode on NSCC, you need to follow these steps. **Even though the scripts contain `tensorflow` in the file name, but it is set to be for PyTorch experiments indeed.**
-
-1. Set up your Jupyter Lab which can access the execute nodes via ssh. A sample PBS script is given in [Jupyter Multinode on NSCC](https://github.com/FrankLeeeee/oh-my-server/tree/main/scripts/nscc/multi_node/pbs_script)
-
-2. After obtaining the resources, refer to [Jupyter Lab](#jupyter-lab) on how to set up the Jupyter Lab on your localhost.
-
-3. Clone the scripts in [Multinode Experiments](https://github.com/FrankLeeeee/oh-my-server/tree/main/scripts/nscc/multi_node/experiments). Put `scripts` and `apps` in the `$HOME` directory and make a temporary ssh directory.
+I would suggest to run Jupyter Lab instead of direct execution of your script as it takes a long time to queue for multinode resources and it is difficult to debug. To run experiments on multinode on NSCC, you need to follow these steps.
 
 ```
-cp -r  scripts $HOME/
-cp -r  apps $HOME/
-mkdir $HOME/sshcont
+# Use OMPI integrated with PBS
+PATH="/home/app/dgx/openmpi-3.1.3-gnu/bin:$PATH" ; export PATH
+
+# run the script in container
+mpirun --mca btl_openib_warn_default_gid_prefix 0 \
+--host dgx4106:1,dgx4105:1 -N 1 --np 2 \
+/opt/singularity/bin/singularity exec --nv  \
+/home/project/ai/singularity/nvcr.io/nvidia/pytorch\:latest.sif \
+python /home/users/ntu/c170166/scratch/projects/dl-auto-load-balance/auto-ml-load-balance/scripts/nscc/jupyter/mpi_testing/comm_with_hvd.py
 ```
 
-4. Edit the `RUN_SCRIPT` in the file `$HOME/scripts/sshcont/job_tensorflow_gloo.sh`. For demo purpose, you can just let it point to the `test_mpi.sh` given in the `test` folder and just make sure the path is correct.
+** This only works with `hvd.init()`, `torch.distributed.init_process_group` will cause timeout for unknown reason. **
 
-```shell
-# change the script directory to yours
-# Edit this
-RUN_SCRIPT=/home/users/ntu/c170166/scratch/projects/dl-auto-load-balance/auto-ml-load-balance/scripts/nscc/jupyter/mpi_testing/test_mpi.sh
-```
-
-5. Run `bash $HOME/scripts/sshcont/invocation` to start multinode experiments. If you run the `test_mpi.sh` file given, you should expect to see something like
-
-```shell
-rank: 0, world size: 2, hostname: dgx4106
-rank: 1, world size: 2, hostname: dgx4105
-trying to initliaze dist
-init successful on hostname: dgx4106
-init successful on hostname: dgx4105
-```
-
-#### IMPORTANT
-
-It seems that it only works with scripts which use horovod so do add `hvd.init()` in your python script. This is a work-around method as I couldn't run the example given by NSCC successfully.
+> Depreated
+>
+> > **Even though the scripts contain `tensorflow` in the file name, but it is set to be for PyTorch experiments indeed.**
+> >
+> > 1.  Set up your Jupyter Lab which can access the execute nodes via ssh. A sample PBS script is given in [Jupyter Multinode on NSCC](https://github.com/FrankLeeeee/oh-my-server/tree/main/scripts/nscc/multi_node/pbs_script)
+> >
+> > 2.  After obtaining the resources, refer to [Jupyter Lab](#jupyter-lab) on how to set up the Jupyter Lab on your localhost.
+> >
+> > 3.  Clone the scripts in [Multinode Experiments](https://github.com/FrankLeeeee/oh-my-server/tree/main/scripts/nscc/multi_node/experiments). Put `scripts` and `apps` in the `$HOME` directory and make a temporary ssh directory.
+> >
+> > ```
+> > cp -r  scripts $HOME/
+> > cp -r  apps $HOME/
+> > mkdir $HOME/sshcont
+> > ```
+> >
+> > 4.  Edit the `RUN_SCRIPT` in the file `$HOME/scripts/sshcont/job_tensorflow_gloo.sh`. For demo purpose, you can just let it point to the `test_mpi.sh` given in the `test` folder and just make sure the path is correct.
+> >
+> > ```shell
+> > # change the script directory to yours
+> > # Edit this
+> > RUN_SCRIPT=/home/users/ntu/c170166/scratch/projects/dl-auto-load-balance/>> auto-ml-load-balance/scripts/nscc/jupyter/mpi_testing/test_mpi.sh
+> > ```
+> >
+> > 5.  Run `bash $HOME/scripts/sshcont/invocation` to start multinode experiments. If you run the `test_mpi.sh` file given, you should expect to see something like
+> >
+> > ```shell
+> > rank: 0, world size: 2, hostname: dgx4106
+> > rank: 1, world size: 2, hostname: dgx4105
+> > trying to initliaze dist
+> > init successful on hostname: dgx4106
+> > init successful on hostname: dgx4105
+> > ```
+> >
+> > #### IMPORTANT
+> >
+> > It seems that it only works with scripts which use horovod so do add `hvd.init()` in your python script. This is a work-around method as I couldn't run the example given by NSCC successfully.

@@ -7,8 +7,8 @@ import argparse
 import datetime
 import logging
 
-FROM_ADDR = '@163.com'
-PASSWORD = ''
+FROM_ADDR = 'franklee_9@163.com'
+PASSWORD = 'MQFKZUTJQBMKMWWT'
 SMTP_SERVER = 'smtp.163.com'
 
 
@@ -22,6 +22,7 @@ def send_email(server, to_addr, job_id):
     msg['To'] = Header(to_addr)
     msg['Subject'] = Header('Your NSCC Job is Running')
     server.sendmail(FROM_ADDR, to_addr, msg.as_string())
+    logging.info("Email alert sent to {}".format(to_addr))
     server.quit()
 
 
@@ -50,14 +51,13 @@ def main():
     args = parse_args()
     logging.basicConfig(
         filename="./monitor_{}.log".format(args.job), level=logging.DEBUG)
-    logging.info("Setting up server")
+    listen_to_qstat(args.job, args.interval)
 
     # set up email server
+    logging.info("Setting up server")
     server = smtplib.SMTP_SSL(host=SMTP_SERVER)
     server.connect(host=SMTP_SERVER, port=465)
     server.login(FROM_ADDR, PASSWORD)
-
-    listen_to_qstat(args.job, args.interval)
     send_email(server, args.email, args.job)
 
 

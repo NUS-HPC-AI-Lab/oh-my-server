@@ -1,0 +1,45 @@
+#!/bin/sh
+
+## The following line specifies the resources request
+#PBS -l select=2:ncpus=5:ngpus=1,place=scatter
+
+### Run in the shared test and development area
+### Note that you do not have exclusive access to the GPUs in the dgx-dev queue
+#PBS -q dgx
+#PBS -l walltime=12:00:00
+
+### Specify project code
+### e.g. 41000001 was the pilot project code
+### Job will not submit unless this is changed
+#PBS -P 11002046
+
+### Specify name for job
+#PBS -N multinode_lsg_jupyter
+
+### Standard output by default goes to file $PBS_JOBNAME.o$PBS_JOBID
+### Standard error by default goes to file $PBS_JOBNAME.e$PBS_JOBID
+### To merge standard output and error use the following
+#PBS -j oe
+
+### Start of commands to be run
+
+# Change directory to where job was submitted
+cd $PBS_O_WORKDIR || exit $?
+echo $0
+hostname
+bash /home/users/ntu/c170166/pbs_scripts/jupyterlab/start_jupyter.sh
+
+
+### Notebook is now running on compute node
+### However you cannot directly access port
+### There are two methods that you can use
+### 1. ssh port forwarding
+### 2. reverse proxy (FRP, etc.)
+
+### Using reverse proxies is a security risk, user is responsible for any data loss or unauthorized access.
+
+### ssh port forwarding
+### On local machine use ssh port forwarding to tunnel to node and port where job is running:
+###   ssh -L$PORT:$HOST:$PORT aspire.nscc.sg     ### e.g. ssh -L8888:dgx4106:8888 aspire.nscc.sg
+### On local machine go to http://localhost:$PORT and use token from found in file stderr.$PBS_JOBID
+### Alternatively, pass a pre-determined token using --NotebookApp.token=... (visible to ps command on node)

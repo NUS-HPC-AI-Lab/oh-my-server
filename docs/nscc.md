@@ -156,9 +156,9 @@ mpirun --mca btl_openib_warn_default_gid_prefix 0 \
 python /home/users/ntu/c170166/scratch/projects/dl-auto-load-balance/auto-ml-load-balance/scripts/nscc/jupyter/mpi_testing/comm_with_hvd.py
 ```
 
-** This only works with `hvd.init()`, `torch.distributed.init_process_group` will cause timeout for unknown reason. **
+**This only works with `hvd.init()`, `torch.distributed.init_process_group` will cause timeout for unknown reason. Thus, you need to replace all collective communication operations with horovod if you are using `torch.distributed package`**
 
-> Depreated
+> **Depreated**
 >
 > > **Even though the scripts contain `tensorflow` in the file name, but it is set to be for PyTorch experiments indeed.**
 > >

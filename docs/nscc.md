@@ -142,7 +142,7 @@ This script will run with Python 3.8. If you have lower Python3 version, you mig
 
 ## Multinode Experiments
 
-I would suggest to run Jupyter Lab instead of direct execution of your script as it takes a long time to queue for multinode resources and it is difficult to debug. To run experiments on multinode on NSCC, you need to follow these steps.
+I would suggest to run Jupyter Lab instead of direct execution of your script as it takes a long time to queue for multinode resources and it is difficult to debug. To run experiments on multinode on NSCC, you need to follow these steps. **Even though the scripts contain `tensorflow` in the file name, but it is set to be for PyTorch experiments indeed.**
 
 1. Set up your Jupyter Lab which can access the execute nodes via ssh. A sample PBS script is given in [Jupyter Multinode on NSCC](https://github.com/FrankLeeeee/oh-my-server/tree/main/scripts/nscc/multi_node/pbs_script)
 

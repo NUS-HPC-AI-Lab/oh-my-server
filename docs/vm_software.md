@@ -1,4 +1,4 @@
-# Frequently-Used Software
+# Software for Single VM
 
 I use CentOS for my personal cloud server, thus the commands will be a bit difference if you using other operating system. For software you wish to make available for all users, I would recommend you to put them under `/opt/apps`.
 
@@ -122,6 +122,10 @@ make
 sudo make install
 
 ```
+
+## OpenMPI
+
+OpenMPI lets you spawn mutltiple processes simultaneously for distributed job. As my VM has too few cores to make OpenMPI effective. I didn't not install it.
 
 ## Useful Plug-ins
 

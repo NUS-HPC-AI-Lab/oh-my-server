@@ -59,6 +59,12 @@ If you want to debug your code or run many short experiments with exclusive GPU 
 
 ## Horovod
 
+---
+
+**Update: now you can try this new Singularity image `/home/projects/ai/singularity/nscc/horovod_0.20.0-tf2.3.0-torch1.6.0-mxnet1.6.0.post0-py3.7-cuda10.1.sif`**
+
+---
+
 If you are using TensorFlow, you can use docker/singularity image directly as Horovod is pre-installed.
 
 If you are using PyTorch, you need to install horovod manually. To install Horovod on NSCC, just run the following script in the container. I used Singularity as it is more sutiable for multinode training.

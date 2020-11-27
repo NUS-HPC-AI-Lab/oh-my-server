@@ -61,7 +61,7 @@ If you want to debug your code or run many short experiments with exclusive GPU 
 
 ---
 
-**Update: now you can try this new Singularity image `/home/projects/ai/singularity/nscc/horovod_0.20.0-tf2.3.0-torch1.6.0-mxnet1.6.0.post0-py3.7-cuda10.1.sif`**
+**UPDATE: You can try this new Singularity image `/home/projects/ai/singularity/nscc/horovod_0.20.0-tf2.3.0-torch1.6.0-mxnet1.6.0.post0-py3.7-cuda10.1.sif` which has Horovod pre-installed now**
 
 ---
 

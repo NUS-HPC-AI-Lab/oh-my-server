@@ -2,6 +2,15 @@
 
 I use CentOS for my personal cloud server, thus the commands will be a bit difference if you using other operating system. For software you wish to make available for all users, I would recommend you to put them under `/opt/apps`.
 
+## Table Of Contents
+
+- [Tmux](#common-linux-commands)
+- [Lmod](#lmod)
+- [Docker](#docker)
+- [Singularity](#singularity)
+- [OpenMPI](#openmpi)
+- [Useful Plug-ins](#useful-plug-ins)
+
 ## Tmux
 
 Install tmux

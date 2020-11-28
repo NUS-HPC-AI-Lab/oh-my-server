@@ -167,5 +167,5 @@ OpenMPI lets you spawn mutltiple processes simultaneously for distributed job. A
 ## Useful Plug-ins
 
 [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh)  
-[oh-my-tmux](https://github.com/gpakosz/.tmux)
+[oh-my-tmux](https://github.com/gpakosz/.tmux)  
 [vimrc-configuration](https://github.com/amix/vimrc)

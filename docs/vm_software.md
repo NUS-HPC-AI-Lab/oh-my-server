@@ -1,15 +1,43 @@
 # Software for Single VM
 
-I use CentOS for my personal cloud server, thus the commands will be a bit difference if you using other operating system. For software you wish to make available for all users, I would recommend you to put them under `/opt/apps`.
+I use CentOS for my personal cloud server, thus the commands will be a bit difference if you using other operating system. For software you wish to make available for all users, I would recommend you to put them under `/opt/apps`. As I will be using `Lmod` to manage all the modules, I build all the software from source. If you wish to install directly, you can just use `yum install`.
 
 ## Table Of Contents
 
+- [GCC](#gcc)
 - [Tmux](#common-linux-commands)
 - [Lmod](#lmod)
 - [Docker](#docker)
 - [Singularity](#singularity)
 - [OpenMPI](#openmpi)
 - [Useful Plug-ins](#useful-plug-ins)
+
+## GCC
+
+GCC compiler is required for compilation for many programs. To build GCC from source, you can follow the steps below.
+
+```shell
+# setup workspace
+cd /opt/apps
+mkdir -p gcc/source
+cd ./gcc/source
+
+# setup source code
+git clone git://gcc.gnu.org/git/gcc.git
+git branch -a # view all branch
+git tag -l  # view all tags
+git checkout <BRANCH_OR_TAG>
+./contrib/download_prerequisites
+
+# make and install
+cd /opt/apps/gcc
+mkdir <VERSION> # e.g. mkdir 8.3.0
+/opt/apps/gcc/source/configure --prefix=/opt/apps/gcc/<VERSION> --enable-languages=c,c++,fortran,go
+make
+make install
+```
+
+**Compilation can take quite long**
 
 ## Tmux
 
@@ -140,3 +168,4 @@ OpenMPI lets you spawn mutltiple processes simultaneously for distributed job. A
 
 [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh)  
 [oh-my-tmux](https://github.com/gpakosz/.tmux)
+[vimrc-configuration](https://github.com/amix/vimrc)

@@ -3,8 +3,8 @@
 ## Table Of Contents
 
 - [Common Linux Commands](#common-linux-commands)
-- [More info in /proc](#more-info-in-/proc)
-- [More info in /sys](#more-info-in-/sys)
+- [More info in /proc](#more-info-in-//proc)
+- [More info in /sys](#more-info-in-//sys)
 - [Scripts](#scripts)
 
 ## Common Linux Commands

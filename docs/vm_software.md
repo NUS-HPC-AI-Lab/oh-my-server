@@ -10,6 +10,8 @@ I use CentOS for my personal cloud server, thus the commands will be a bit diffe
 - [Docker](#docker)
 - [Singularity](#singularity)
 - [OpenMPI](#openmpi)
+- [Node.js](#node.js)
+- [Go](#go)
 - [Useful Plug-ins](#useful-plug-ins)
 
 ## GCC
@@ -163,6 +165,14 @@ sudo make install
 ## OpenMPI
 
 OpenMPI lets you spawn mutltiple processes simultaneously for distributed job. As my VM has too few cores to make OpenMPI effective. I didn't not install it.
+
+## Node.js
+
+If you are a web developer, then most likely you will need Node.js for your frontend and backend devepment. To install Node.js on the server, you can download the binary files from the [Node.js website](https://nodejs.org/en/download/) with [instructions](https://github.com/nodejs/help/wiki/Installation).
+
+## Go
+
+To install Go, you can also download the binary directly at [Go Installation](https://golang.org/doc/install).
 
 ## Useful Plug-ins
 

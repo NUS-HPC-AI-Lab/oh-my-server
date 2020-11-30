@@ -6,6 +6,7 @@ This repository aims to provide some guidance on creating and managing your own 
 
 - Get Started
   - [Understanding Your System](docs/sysinfo.md)
+  - [Hardware Keywords](docs/hardware_keywords.md)
 - Initialization
   - [Initializing Your Server](docs/vm_software.md)
   - [Initializing Your Cluster](docs/cluster_software.md)

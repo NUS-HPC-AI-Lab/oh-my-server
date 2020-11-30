@@ -179,3 +179,4 @@ To install Go, you can also download the binary directly at [Go Installation](ht
 [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh)  
 [oh-my-tmux](https://github.com/gpakosz/.tmux)  
 [vimrc-configuration](https://github.com/amix/vimrc)
+[vim-plugin-code-autocomplete](https://github.com/ycm-core/YouCompleteMe)

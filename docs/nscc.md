@@ -162,6 +162,8 @@ mpirun --mca btl_openib_warn_default_gid_prefix 0 \
 python /home/users/ntu/c170166/scratch/projects/dl-auto-load-balance/auto-ml-load-balance/scripts/nscc/jupyter/mpi_testing/comm_with_hvd.py
 ```
 
+If you wish to run as a single script instead of setting up a Jupyter Lab, you can use `--host $PBS_NODEFILE` to tell your job which hosts to run on.
+
 **This only works with `hvd.init()`, `torch.distributed.init_process_group` will cause timeout for unknown reason. Thus, you need to replace all collective communication operations with horovod if you are using `torch.distributed package`**
 
 > **Depreated**

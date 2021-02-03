@@ -164,7 +164,7 @@ python /home/users/ntu/c170166/scratch/projects/dl-auto-load-balance/auto-ml-loa
 
 If you wish to run as a single script instead of setting up a Jupyter Lab, you can use `--host $PBS_NODEFILE` to tell your job which hosts to run on.
 
-**This only works with `hvd.init()`, `torch.distributed.init_process_group` will cause timeout for unknown reason. Thus, you need to replace all collective communication operations with horovod if you are using `torch.distributed package`**
+**You can use both `horovod` or `torch.distributed` package. For torch.distributed, you need to set the communcation interface, e.g. `export GLOO_SOCKET_IFNAME=enp1s0f1` for successfully initialization**
 
 > **Depreated**
 >

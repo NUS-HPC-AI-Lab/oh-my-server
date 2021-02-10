@@ -140,7 +140,7 @@ It is tedious to constantly check whether your job has started running. I wrote 
 3. Clone `monitor.sh` and `nscc_monitor.py` from [monitor_job](https://github.com/FrankLeeeee/oh-my-server/blob/main/scripts/nscc/monitor_job) to your home directory
 4. Edit the `FROM_ADDR` and `PASSWORD` in `nscc_monitor.py` with your email account and STMP authorization key.
 5. Change the path to Anaconda and `nscc_monitor.py` in `monitor.sh`
-6. Run `nohup bash ./monitor.sh <JOB_ID> <RECEIVER_EMAIL> <INTERVAL> > ./nohup.log 2>&1 &`
+6. Run `bash ./monitor.sh <JOB_ID> <RECEIVER_EMAIL> <INTERVAL>`
 
 The `nohup` command will run in the background even if you exit from your terminal. This will produce two output files, one is `nohup.log` and `monitor_<job_id>.log`. `monitor_<job_id>.log` will show you the status of the script. `<INTERVAL>` is set to be 600 by default which means it will check the status of the job every 10 min.
 

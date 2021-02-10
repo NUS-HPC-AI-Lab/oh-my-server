@@ -6,4 +6,4 @@ interval=${3:-"600"}
 
 
 source ~/anaconda3/bin/activate base
-python /home/users/ntu/c170166/pbs_scripts/job_monitor/nscc_monitor.py --job $job --email $email --interval $interval
+nohup python /home/users/ntu/c170166/pbs_scripts/job_monitor/nscc_monitor.py --job $job --email $email --interval $interval > ./nohup.log 2>&1 &

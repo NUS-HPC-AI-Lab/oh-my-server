@@ -12,3 +12,4 @@ This repository aims to provide some guidance on creating and managing your own 
   - [Initializing Your Cluster](docs/cluster_software.md)
 - HPC System Notes
   - [NSCC](docs/nscc.md)
+  - [TACC_Longhorn](docs/tacc_longhorn.md)

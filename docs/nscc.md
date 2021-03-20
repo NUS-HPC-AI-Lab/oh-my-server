@@ -9,6 +9,7 @@
 - [Python Package Management](#python-package-management)
 - [Job Status Email Alert](#job-status-email-alert)
 - [Multinode Experiments](#multinode-experiments)
+- [Dataset](#dataset)
 
 ## Common Commands
 
@@ -203,3 +204,14 @@ If you wish to run as a single script instead of setting up a Jupyter Lab, you c
 > > #### IMPORTANT
 > >
 > > It seems that it only works with scripts which use horovod so do add `hvd.init()` in your python script. This is a work-around method as I couldn't run the example given by NSCC successfully.
+
+## Dataset
+
+```shell
+--train-dir=/scratch/users/nus/e0575577/ImageNet/train
+--val-dir=/scratch/users/nus/e0575577/ImageNet/val
+```
+
+You can use a prepared ImageNet-1K (ILSVRC2012) in above path.
+
+NSCC does not provide any prepared dataset : (

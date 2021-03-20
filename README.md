@@ -13,3 +13,5 @@ This repository aims to provide some guidance on creating and managing your own 
 - HPC System Notes
   - [NSCC](docs/nscc.md)
   - [TACC_Longhorn](docs/tacc_longhorn.md)
+  - [TACC_Frontera](docs/tacc_frontera.md)
+

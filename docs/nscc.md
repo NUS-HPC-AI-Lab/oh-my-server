@@ -212,6 +212,6 @@ If you wish to run as a single script instead of setting up a Jupyter Lab, you c
 --val-dir=/scratch/users/nus/e0575577/ImageNet/val
 ```
 
-You can use a prepared ImageNet-1K (ILSVRC2012) use above path.
+You can use a prepared ImageNet-1K (ILSVRC2012) in above path.
 
 NSCC does not provide any prepared dataset : (

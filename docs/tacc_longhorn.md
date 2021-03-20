@@ -72,3 +72,18 @@ python your_code.py
 You should use ibrun instead of mpirun or mpiexec here, and -np means total GPU numbers.
 
 Note: Although in Longhorn tutorial, they use "#SBATCH -A myproject       # Allocation name", you can actually delete it. If you incorrect set it, you will meet permission error when submit job.
+
+## Dataset
+
+```shell
+cp /scratch/00946/zzhang/data/imagenet-1k.tar /your/path
+tar xf imagenet-1k.tar
+```
+
+You can get a prepared ImageNet-1K (ILSVRC2012) use above command.
+
+Maybe you can find other prepared dataset around this path.
+
+If a job uses many nodes (eg. 32 nodes with 128 GPUs) and reads large dataset(eg. ImageNet) directly from the hard disk, it will cause huge IO pressure on the file system, which may cause the job to be killed by the system : (
+
+I am communicating and verifying with the system administrator, and the solution will come soon.

@@ -1,5 +1,11 @@
 # TACC-Longhorn
 
+- [Build Conda Environment ](#build-conda-environment )
+- [Common Commands](#common-commands)
+- [Job Script Example](#job-script-example)
+- [Dataset](#dataset)
+- [Large Scale Experiment](#large-scale-experiment)
+
 ## Build Conda Environment 
 
 You can follow the file "TACC distributed pytorch.pdf", which show an example about how to build your conda environment and run the code with interactive usage. But the example use PyTorch 1.1, and the newest version in the used [link](https://public.dhe.ibm.com/ibmdl/export/pub/software/server/ibm-ai/conda/) seems only PyTorch 1.3. In addition, unlike other TACC machines, Longhorn nodes are a PowerPC architecture (Power PC 64 LE). Thus, when pulling images from (e.g.) Docker Hub, make sure the image is Power PC 64 LE compatible.  Here, you can use the method in this [link](https://stackoverflow.com/questions/52750622/how-to-install-pytorch-on-power-8-or-ppc64-machine/64528124#64528124?newreg=1b10fc8fcbed4beca9cdc3d4238359a5), to bulid a Python 3.6 and PyTorch 1.5 conda environment.
@@ -84,6 +90,47 @@ You can get a prepared ImageNet-1K (ILSVRC2012) use above command.
 
 Maybe you can find other prepared dataset around this path.
 
+## Large Scale Experiment
+
 If a job uses many nodes (eg. 32 nodes with 128 GPUs) and reads large dataset(eg. ImageNet) directly from the hard disk, it will cause huge IO pressure on the file system, which may cause the job to be killed by the system : (
 
-I am communicating and verifying with the system administrator, and the solution will come soon.
+So, for large scale experiment, we need first move the data to the /tmp file system of nodes for temporary storage and then run the program, to reduce the IO pressure of the main file system.
+
+large scale experiment job script example
+
+```shell
+#!/bin/sh
+
+#SBATCH -J myjob           # Job name
+#SBATCH -o myjob.o%j       # Name of stdout output file
+#SBATCH -e myjob.e%j       # Name of stderr error file
+#SBATCH -p v100            # Queue (partition) name
+#SBATCH -N 2               # Total # of nodes (must be 1 for serial)
+#SBATCH -n 8               # Total # of mpi tasks (should be 1 for serial)
+#SBATCH -t 00:30:00        # Run time (hh:mm:ss)
+#SBATCH --mail-user=your email
+#SBATCH --mail-type=all    # Send email at begin and end of job
+
+pwd
+date
+
+cd your_code_path
+module load conda
+conda activate py36pt
+
+scontrol show hostnames $SLURM_NODELIST > /tmp/hostfile
+
+cat /tmp/hostfile
+
+mpiexec -hostfile /tmp/hostfile -N 1 ./cp_imagenet_to_temp_bin.sh
+
+ibrun -np 8 \
+python your_code.py
+```
+
+cp_imagenet_to_temp_bin.sh copy and extract imagenet data to following path, which may take twenty minutes. The data in /tmp will be automatically deleted when job finished.
+
+```shell
+--train-dir=/tmp/imagenet/ILSVRC2012_img_train/
+--val-dir=/tmp/imagenet/ILSVRC2012_img_val/
+```

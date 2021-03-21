@@ -7,7 +7,7 @@
 #SBATCH -N 2               # Total # of nodes (must be 1 for serial)
 #SBATCH -n 8               # Total # of mpi tasks (should be 1 for serial)
 #SBATCH -t 00:30:00        # Run time (hh:mm:ss)
-#SBATCH --mail-user=yongbinli@u.nus.edu
+#SBATCH --mail-user=your email
 #SBATCH --mail-type=all    # Send email at begin and end of job
 
 

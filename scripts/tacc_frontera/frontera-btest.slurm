@@ -23,4 +23,4 @@ module load cuda/10.1 cudnn nccl
 
 cd /scratch1/07801/nusbin20/tacc-our
 
-ibrun -np 8 LD_PRELOAD=/work/00410/huang/share/wrapper.so python3 pytorch_imagenet_resnet.py  --epochs 90 --model resnet50 --train-dir=/tmp/fs_871009/ILSVRC2012_img_train --val-dir=/tmp/fs_871009/ILSVRC2012_img_val 
+ibrun -np 8 LD_PRELOAD=/work/00410/huang/share/wrapper.so python pytorch_imagenet_resnet.py  --epochs 90 --model resnet50 --train-dir=/tmp/fs_871009/ILSVRC2012_img_train --val-dir=/tmp/fs_871009/ILSVRC2012_img_val 

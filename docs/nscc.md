@@ -54,7 +54,7 @@ If you want to debug your code or run many short experiments with exclusive GPU 
 
 1. Setup NSCC VPN (For Mac user: https://help.nscc.sg/vpnmac/). NSCC VPN allows you to access NSCC server from `aspire.nscc.sg`. You can send data to outside machine with this IP but not with `ntu.nscc.sg` or `nus.nscc.sg`. This ensures that you can access jupyter lab from your local machine.
 2. Log in to your nscc account by `ssh <username>@aspire.nscc.sg`
-3. Submit a jupyter job. `qsub ~/jupyter.pbs`. You can refer to https://help.nscc.sg/wp-content/uploads/AI_System_QuickStart.pdf for how to write jupyter job script.
+3. Submit a jupyter job. There are two ways to start the Jupyter Lab. The first way is to start Jupyter Lab in a container (You can refer to https://help.nscc.sg/wp-content/uploads/AI_System_QuickStart.pdf for how to write this kind of script). The second way is to start Jupyter Lab only and run containers in Jupyter Lab (You can refer to my script https://github.com/FrankLeeeee/oh-my-server/tree/main/scripts/nscc/multi_node/pbs_script). The second way is highly recommended because you can access both your base environment in the compute node and the environment in containers and you can run containers with different images.
 4. Once your job is running, you need to check the output file and get the host and port on which your jupyter is running. Then, you can connect to your jupyter lab via port forwarding. The command is like `ssh -L 8888:dgx4106:8888 aspire.nscc.sg`. You just need to chagne `dgx4106:8888` to the `<hostname>:<port>` as shown in your pbs output file.
 5. Finally, open your browser and enter `localhost:8888` to access your jupyter lab.
 

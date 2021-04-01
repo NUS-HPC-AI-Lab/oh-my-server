@@ -128,7 +128,9 @@ ibrun -np 8 \
 python your_code.py
 ```
 
-cp_imagenet_to_temp_bin.sh copy and extract imagenet data to following path, which may take twenty minutes. The data in /tmp will be automatically deleted when job finished.
+cp_imagenet_to_temp_bin.sh copy and extract imagenet data to following path, which may take 50 minutes :( 
+
+The data in /tmp will be automatically deleted when job finished, which is located in the following path
 
 ```shell
 --train-dir=/tmp/imagenet/ILSVRC2012_img_train/

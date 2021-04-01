@@ -131,6 +131,8 @@ You should use ibrun instead of mpirun or mpiexec here, and -np means total GPU 
 
 Note: Although in Frontera tutorial, they use "#SBATCH -A myproject       # Allocation name", you can actually delete it. If you incorrect set it, you will meet permission error when submit job.
 
+From 6 April 2021, for Frontera jobs, a new queue named *small* has been created specifically for one and two node jobs. Jobs of one or two nodes that will run for up to 48 hours should be submitted to the *small* queue. The *normal* queue now has a lower limit of 3 nodes for all jobs. This should improve the turnaround time for jobs in the *normal* queue and small jobs in the *small* queue.
+
 ## Dataset
 
 ```shell

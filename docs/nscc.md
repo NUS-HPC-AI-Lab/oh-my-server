@@ -69,7 +69,7 @@ on the NSCC server. The procedure is as follows:
 
 
 <p align="center">
-  <img src="https://github.com/FrankLeeeee/oh-my-server/blob/lsg_dev/figures/NSCC/NSCC_jupyter.png?raw=true" width="60%" alt="jupyter workflow">
+  <img src="https://github.com/FrankLeeeee/oh-my-server/blob/main/figures/NSCC/NSCC_jupyter.png?raw=true" width="60%" alt="jupyter workflow">
 </p>
 
 1. Setup NSCC VPN for your [Mac](https://help.nscc.sg/vpnmac/) or [Windows](https://help.nscc.sg/vpnmicrosoft/). You

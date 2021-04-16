@@ -1,13 +1,14 @@
-# NSCC
+# NSCC AI System
 
 ## Table Of Contents
 
 - [Common Commands](#common-commands)
+- [Scheduler](#scheduler)
+- [Job Status Email Alert](#job-status-email-alert)
 - [Jupyter Lab](#jupyter-lab)
 - [Horovod](#horovod)
 - [Container](#container)
 - [Python Package Management](#python-package-management)
-- [Job Status Email Alert](#job-status-email-alert)
 - [Multinode Experiments](#multinode-experiments)
 - [Dataset](#dataset)
 
@@ -48,27 +49,84 @@ singularity run pytorch\:latest.sif <PATH_TO_EXECUTABLE>
 > >
 > > If --ipc=host is not specified then the following option is also added: --shm-size=1g
 
+## Scheduler
+
+NSCC uses PBS Pro as the job scheduler, you can refer to the
+[NSCC official guide](https://help.nscc.sg/pbspro-quickstartguide/) for detailed instructions.
+
+## Job Status Email Alert
+
+To receive notification when your job status changes, you can add the following to your PBS job script.
+
+```shell
+#PBS -M username@x.y.z
+```
+
 ## Jupyter Lab
 
-If you want to debug your code or run many short experiments with exclusive GPU resources, you can launch a jupyter lab on the NSCC server. The procedure is as follows:
+If you want to debug your code or run many short experiments with exclusive GPU resources, you can launch a jupyter lab
+on the NSCC server. The procedure is as follows:
 
-1. Setup NSCC VPN (For Mac user: https://help.nscc.sg/vpnmac/). NSCC VPN allows you to access NSCC server from `aspire.nscc.sg`. You can send data to outside machine with this IP but not with `ntu.nscc.sg` or `nus.nscc.sg`. This ensures that you can access jupyter lab from your local machine.
-2. Log in to your nscc account by `ssh <username>@aspire.nscc.sg`
-3. Submit a jupyter job. There are two ways to start the Jupyter Lab. The first way is to start Jupyter Lab in a container (You can refer to https://help.nscc.sg/wp-content/uploads/AI_System_QuickStart.pdf for how to write this kind of script). The second way is to start Jupyter Lab only and run containers in Jupyter Lab (You can refer to my script https://github.com/FrankLeeeee/oh-my-server/tree/main/scripts/nscc/multi_node/pbs_script). The second way is highly recommended because you can access both your base environment in the compute node and the environment in containers and you can run containers with different images.
-4. Once your job is running, you need to check the output file and get the host and port on which your jupyter is running. Then, you can connect to your jupyter lab via port forwarding. The command is like `ssh -L 8888:dgx4106:8888 aspire.nscc.sg`. You just need to chagne `dgx4106:8888` to the `<hostname>:<port>` as shown in your pbs output file.
-5. Finally, open your browser and enter `localhost:8888` to access your jupyter lab.
+
+<p align="center">
+  <img src="https://github.com/FrankLeeeee/oh-my-server/blob/lsg_dev/figures/NSCC/NSCC_jupyter.png?raw=true" width="60%" alt="jupyter workflow">
+</p>
+
+1. Setup NSCC VPN for your [Mac](https://help.nscc.sg/vpnmac/) or [Windows](https://help.nscc.sg/vpnmicrosoft/). You
+   should not login via the school VPN as they do not provide outgoing internet access. The NSCC VPN allows you to
+   access NSCC server from `aspire.nscc.sg`. You can send data to outside machine with this IP but not
+   with `ntu.nscc.sg` or
+   `nus.nscc.sg`. This ensures that you can access jupyter lab from your local machine later.
+
+2. Log in to your nscc account by
+   ```shell
+   ssh <USERNAME>@aspire.nscc.sg
+   ```
+
+3. Submit a jupyter job. There are two ways to start the Jupyter Lab. There are two ways to start the jupyter lab.
+    - The first way is to start Jupyter Lab in a container
+      (You can refer to the [official guide](https://help.nscc.sg/wp-content/uploads/AI_System_QuickStart.pdf)
+      for how to write this kind of script).
+    - The second way is to start Jupyter Lab only and run containers in Jupyter Lab. You can refer
+      to [my script](https://github.com/FrankLeeeee/oh-my-server/tree/main/scripts/nscc/multi_node/pbs_script).
+
+   The second way is highly recommended because you can access both your base environment in the compute node and the
+   environment in containers and you can run containers with different images. For example, if you choose a wrong
+   container via the first method, you have to quit the job and re-submit but this is not necessary for the second
+   method.
+
+4. Once your job is running, you need to check which host on which jupyter is running by:
+   ```shell
+   qstat -f <JOB_ID>
+   ```
+
+   You can also check the job output file and get the port on which your jupyter is running.
+
+5. Then, you can connect to your jupyter lab via port forwarding. The command is like
+   ```shell
+   ssh -L <LOCAL_PORT>:<NSCC_HOST>:<NSCC_PORT> <USERNAME>@aspire.nscc.sg
+   
+   # example
+   ssh -L 8888:dgx4106:8888 u12345@aspire.nscc.sg
+   ```
+   The `NSCC_HOST`  and `NSCC_PORT` are found in step 4. `LOCAL_PORT` can be any port.
+
+6. Finally, open your browser and enter `localhost:<LOCAL_PORT>` to access the remote jupyter lab.
 
 ## Horovod
 
 ---
 
-**UPDATE: You can try this new Singularity image `/home/projects/ai/singularity/nscc/horovod_0.20.0-tf2.3.0-torch1.6.0-mxnet1.6.0.post0-py3.7-cuda10.1.sif` which has Horovod pre-installed now**
+**UPDATE: You can try this new Singularity
+image `/home/projects/ai/singularity/nscc/horovod_0.20.0-tf2.3.0-torch1.6.0-mxnet1.6.0.post0-py3.7-cuda10.1.sif` which
+has Horovod pre-installed now**
 
 ---
 
 If you are using TensorFlow, you can use docker/singularity image directly as Horovod is pre-installed.
 
-If you are using PyTorch, you need to install horovod manually. To install Horovod on NSCC, just run the following script in the container. I used Singularity as it is more sutiable for multinode training.
+If you are using PyTorch, you need to install horovod manually. To install Horovod on NSCC, just run the following
+script in the container. I used Singularity as it is more sutiable for multinode training.
 
 ```shell
 #!/bin/bash
@@ -82,136 +140,78 @@ export HOROVOD_WITH_PYTORCH=1
 pip install --no-cache-dir --user  horovod==0.18.2
 ```
 
-> **Deprecated**
->
-> > To install horovod on NSCC, you need to build NCCL first. (I didn't find the path to NCCL on NSCC, thus I decided to build on my own. Please tell me if you find the path to nccl). **I conducted all the steps below within the container `nscc-docker run -t nvcr.io/nvidia/pytorch:latest` as the python outside is of verison 2.7. You might be able to install outside container with conda but I never tested this method.**
-> >
-> > ```shell
-> > cd <NEW_PATH_FOR_NCCL>
-> > git clone https://github.com/NVIDIA/nccl.git
-> > cd ./nccl
-> > make src.build CUDA_HOME=/usr/local/cuda
-> > ```
-> >
-> > Next, you need to install pytorch to your local directory. I did not test other versions of pytorch, but as long as you install with `--user` and the version is higher than the pre-installed pytorch version, it should be fine. (This is because horovod cannot be built with the pre-installed pytorch of the image for some unknown reason (perhaps permission error), so we need to have our own pytorch.)
-> >
-> > ```shell
-> > pip install --user torch==1.7 torchvision==0.8
-> > ```
-> >
-> > Next, you need to install horovod with the following script.
-> >
-> > ```shell
-> > #!/bin/bash
-> >
-> > export HOROVOD_NCCL_HOME=/home/users/ntu/c170166/local/nccl/nccl/build
-> > export HOROVOD_GPU_ALLREDUCE=NCCL
-> > export HOROVOD_WITH_PYTORCH=1
-> > pip install --no-cache-dir --user horovod
-> > ```
-> >
-> > I built and installed horovod in the docker container `nvcr.io/nvidia/pytorch:latest` and it will install horovod to `/home/users/ntu/c170166/.local/lib/python3.6/site-packages` and horovodrun bin is in `/home/users/ntu/c170166/.local/bin`. By running `horovodrun --check build`, you should see the installation is successful.
-> >
-> > #### IMPORTANT
-> >
-> > The horovod and pytorch will remain even if you exit from the container as they are installed in the user's directory instead of container's site-package directory. Thus, you do not need to re-install when you start a new container. However, this might cause an issue if you use an image of different version. For example, you build horovod with a CUDA-10.2 but run horovod-based code on another CUDA-9 image and this might give you an error which I cannot foresee.
-
 ## Container
 
-NSCC provides both Singularity and Docker containers. The containers used mostly are NGC contianers. The Singularity ones are obtained by converting Docker image to Singularity image. Some points that I have observed are that:
+NSCC provides both Singularity and Docker containers. The containers used mostly are NGC contianers. The Singularity
+ones are obtained by converting Docker image to Singularity image. Some points that I have observed are that:
 
 1. You do not have root access in both Docker and Singularity container.
-2. `singularity shell xxx.sif` behaves interestingly different from `singularity run xxx.sif`. Even though both will start bash as the default shell, `singularity shell` does not source your bashrc file while `singularity run` actually does. So your init script in bashrc will be omitted when you execute `singularity shell`. It is desgined to be so and look at https://github.com/hpcng/singularity/issues/643 for more info.
+2. `singularity shell xxx.sif` behaves interestingly different from `singularity run xxx.sif`. Even though both will
+   start bash as the default shell, `singularity shell` does not source your bashrc file while `singularity run`
+   actually does. So your init script in bashrc will be omitted when you execute `singularity shell`. It is desgined to
+   be so and look at https://github.com/hpcng/singularity/issues/643 for more info.
 
 ## Python Package Management
 
-The container environment will use its own Python by default. However, you may need some extra libraries which are not provided in the container. For exmaple, you may need Horovod when you run with PyTorch container. You cannot install these libraries in the /opt/conda folder as it is read-only due to the lack of root access. You may have your libraries installed in the user default site-packages directory or your own Anaconda directory. You can go through the following steps to check if you have access to your own installed library in the container.
+It is sometimes possible that the container does not provide the Python libraries you need. In this case, you need to be
+careful in managing these libraries.
 
-1. Run `python -m site`. You can see the directories where Python searches for libraries during `import` in the `sys.path`.
-2. If you find that the directory where your libraries are installed are not in the `sys.path`, you can `export PYTHONPATH=<YOUR_PATH>:$PYTHONPATH`. For example, Horovod is installed in the `/home/users/ntu/c170166/.local/lib/python3.6/site-packages`, but for reason, Python cannot find Horovod during import. I can run `export PYTHONPATH=/home/users/ntu/c170166/.local/lib/python3.6/site-packages:$PYTHONPATH`. Now, you should be able to import Horovod as normal.
+You can install your library to your user directory by:
 
-> You can also add `sys.path.insert(0, '/home/users/ntu/c170166/.local/lib/python3.6/site-packages')` in your python file instead of exporting the environment variable for step 2.
+```shell
+pip install --user <LIBRARY>
+```
 
-## Job Status Email Alert
+This should install Python library to `~/.local/lib` of your home directory.
 
-It is tedious to constantly check whether your job has started running. I wrote a simple email alert script which will send an email to you once your sepcified job has started running. This is more suitable if you are running Jupyter. Follow the following steps to set up this simple alert system on your NSCC account.
+You can also check the directories where Python searches for libraries during `import` by running
 
-1. Log in by `ssh <username>@nus.nscc.sg`
-2. Change to NSCC nodes by `ssh nscc04-ib0`. This is becauase NTU and NUS nodes cannot send data to outside internet.
-3. Clone `monitor.sh` and `nscc_monitor.py` from [monitor_job](https://github.com/FrankLeeeee/oh-my-server/blob/main/scripts/nscc/monitor_job) to your home directory
-4. Edit the `FROM_ADDR` and `PASSWORD` in `nscc_monitor.py` with your email account and STMP authorization key.
-5. Change the path to Anaconda and `nscc_monitor.py` in `monitor.sh`
-6. Run `bash ./monitor.sh <JOB_ID> <RECEIVER_EMAIL> <INTERVAL>`
+```shell
+python -m site
+```
 
-The `nohup` command will run in the background even if you exit from your terminal. This will produce two output files, one is `nohup.log` and `monitor_<job_id>.log`. `monitor_<job_id>.log` will show you the status of the script. `<INTERVAL>` is set to be 600 by default which means it will check the status of the job every 10 min.
+If you container Python does not source your Python package, you can perform one of the following methods to add these
+libraries to PYTHONPATH.
 
-This script will run with Python 3.8. If you have lower Python3 version, you might have issue with the server setup in the `nscc_monitor.py`, but it is simply syntax error which be solved by google easily (`smtplib` updates some API from Python 3.7 onwards)
+- export PYTHONPATH=<LIBRARY_ROOT_PATH>:$PYTHONPATH
+- add `sys.path.insert(0, <LIBRARY_ROOT_PATH>)` in your python file For example, the `LIBRARY_ROOT_PATH` can
+  be `/home/users/ntu/c170166/.local/lib/python3.6/site-packages`.
+
+If you are not sure where a specific library is imported from when you run your script, you can check like below:
+
+```python
+# take pytorch as an example
+import torch
+
+print(torch.__file__)
+```
 
 ## Multinode Experiments
 
-I would suggest to run Jupyter Lab instead of direct execution of your script as it takes a long time to queue for multinode resources and it is difficult to debug. To run experiments on multinode on NSCC, you need to follow these steps.
+First of all, it takes a long time to queue for resources on NSCC. It is normal to wait for a few days if you request
+for 2 nodes with 4 GPUs each. At the initial debugging stage, it is definitely crazy if you submit a job script again
+and again. Thus, I would highly recommend you to debug using the Jupyter Lab as mentioned above.
+
+To run experiments on multinode on NSCC, you need to follow these steps.
 
 ```
 # Use OMPI integrated with PBS
-PATH="/home/app/dgx/openmpi-3.1.3-gnu/bin:$PATH" ; export PATH
+export PATH=/home/app/dgx/openmpi-3.1.3-gnu/bin:$PATH
 
 # run the script in container
 mpirun --mca btl_openib_warn_default_gid_prefix 0 \
 --host dgx4106:1,dgx4105:1 -N 1 --np 2 \
 /opt/singularity/bin/singularity exec --nv  \
 /home/project/ai/singularity/nvcr.io/nvidia/pytorch\:latest.sif \
-python /home/users/ntu/c170166/scratch/projects/dl-auto-load-balance/auto-ml-load-balance/scripts/nscc/jupyter/mpi_testing/comm_with_hvd.py
+python <YOUR_SCRIPT>
 ```
 
-If you wish to run as a single script instead of setting up a Jupyter Lab, you can use `--host $PBS_NODEFILE` to tell your job which hosts to run on.
-
-**You can use both `horovod` or `torch.distributed` package. For torch.distributed, you need to set the communcation interface, e.g. `export GLOO_SOCKET_IFNAME=enp1s0f1` for successfully initialization**
-
-> **Depreated**
->
-> > **Even though the scripts contain `tensorflow` in the file name, but it is set to be for PyTorch experiments indeed.**
-> >
-> > 1.  Set up your Jupyter Lab which can access the execute nodes via ssh. A sample PBS script is given in [Jupyter Multinode on NSCC](https://github.com/FrankLeeeee/oh-my-server/tree/main/scripts/nscc/multi_node/pbs_script)
-> >
-> > 2.  After obtaining the resources, refer to [Jupyter Lab](#jupyter-lab) on how to set up the Jupyter Lab on your localhost.
-> >
-> > 3.  Clone the scripts in [Multinode Experiments](https://github.com/FrankLeeeee/oh-my-server/tree/main/scripts/nscc/multi_node/experiments). Put `scripts` and `apps` in the `$HOME` directory and make a temporary ssh directory.
-> >
-> > ```
-> > cp -r  scripts $HOME/
-> > cp -r  apps $HOME/
-> > mkdir $HOME/sshcont
-> > ```
-> >
-> > 4.  Edit the `RUN_SCRIPT` in the file `$HOME/scripts/sshcont/job_tensorflow_gloo.sh`. For demo purpose, you can just let it point to the `test_mpi.sh` given in the `test` folder and just make sure the path is correct.
-> >
-> > ```shell
-> > # change the script directory to yours
-> > # Edit this
-> > RUN_SCRIPT=/home/users/ntu/c170166/scratch/projects/dl-auto-load-balance/>> auto-ml-load-balance/scripts/nscc/jupyter/mpi_testing/test_mpi.sh
-> > ```
-> >
-> > 5.  Run `bash $HOME/scripts/sshcont/invocation` to start multinode experiments. If you run the `test_mpi.sh` file given, you should expect to see something like
-> >
-> > ```shell
-> > rank: 0, world size: 2, hostname: dgx4106
-> > rank: 1, world size: 2, hostname: dgx4105
-> > trying to initliaze dist
-> > init successful on hostname: dgx4106
-> > init successful on hostname: dgx4105
-> > ```
-> >
-> > #### IMPORTANT
-> >
-> > It seems that it only works with scripts which use horovod so do add `hvd.init()` in your python script. This is a work-around method as I couldn't run the example given by NSCC successfully.
+For PyTorch users, you can use `horovod` for cross-node communication. However, if you are using `torch.distributed`,
+you need to specify the communication interface by `export NCCL_SOCKET_IFNAME=enp1s0f1` or
+add `os.environ['NCCL_SOCKET_IFNAME'] = 'enp1s0f1'` in your Python file. If you are using `gloo` backend, the
+environment variable will be `GLOO_SOCKET_IFNAME`. This is to force PyTorch use InfiniBand for communication. Otherwise,
+the program will be stuck at initialization based on my test.
 
 ## Dataset
 
-```shell
---train-dir=/scratch/users/nus/e0575577/ImageNet/train
---val-dir=/scratch/users/nus/e0575577/ImageNet/val
-```
-
-You can use a prepared ImageNet-1K (ILSVRC2012) in above path.
-
-NSCC does not provide any prepared dataset : (
+The ImageNet dataset is placed at `/scratch/users/nus/e0575577/ImageNet` if you are using the shared account.

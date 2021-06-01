@@ -3,7 +3,7 @@
 - [Build Virtualenv Environment ](#build-virtualenv-environment )
 - [Common Commands](#common-commands)
 - [Job Script Example](#job-script-example)
-- [Horovod Gloo](#horovod gloo)
+- [Horovod Gloo](#horovod_gloo)
 - [Dataset and Transfer files](#dataset-and-transfer-files)
 - [Large Scale Experiment](#large-scale-experiment)
 - [DALI](#dali)

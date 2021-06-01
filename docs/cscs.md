@@ -4,7 +4,7 @@
 - [Interactive Usage](#interactive-usage)
 - [Common Commands](#common-commands)
 - [PyTorch Job Script Example](#pytorch-job-script-example)
-- [Horovod Gloo](#horovod gloo)
+- [Horovod Gloo](#horovod_gloo)
 - [Spark](#spark)
 - [TensorFlow](#tensorflow)
 - [Dataset and Transfer files](#dataset-and-transfer-files)

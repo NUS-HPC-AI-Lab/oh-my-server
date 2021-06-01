@@ -3,7 +3,7 @@
 - [Build Conda Environment ](#build-conda-environment )
 - [Common Commands](#common-commands)
 - [Job Script Example](#job-script-example)
-- [Dataset](#dataset)
+- [Dataset and Transfer files](#dataset-and-transfer-files)
 - [Large Scale Experiment](#large-scale-experiment)
 
 ## Build Conda Environment 

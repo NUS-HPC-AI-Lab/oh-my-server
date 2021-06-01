@@ -205,6 +205,8 @@ scp G:/globus_share/xxx.tar your_account@frontera.tacc.utexas.edu:/your_path/ima
 
 ## Large Scale Experiment
 
+(You can also consider DALI rather than this part)
+
 If a job uses many nodes (eg. 32 nodes with 128 GPUs) and reads large dataset(eg. ImageNet) directly from the hard disk, it will cause huge IO pressure on the file system, which may cause the job to be killed by the system : (
 
 Different with TACC-Longhorn, which can directly use /tmp for ImageNet. The /tmp file system on TACC-Frontera is only around 100G and cannot copy and extract the whole ImageNet.

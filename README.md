@@ -15,4 +15,5 @@ personal debugging experiences on different HPC systems as well.
     - [NSCC AI System](docs/nscc.md)
     - [TACC Longhorn](docs/tacc_longhorn.md)
     - [TACC Frontera](docs/tacc_frontera.md)
+    - [CSCS](docs/cscs.md)
 

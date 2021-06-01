@@ -5,6 +5,8 @@
 - [Job Script Example](#job-script-example)
 - [Dataset and Transfer files](#dataset-and-transfer-files)
 - [Large Scale Experiment](#large-scale-experiment)
+- [DALI](#dali)
+- [Question Ticket](#question-ticket)
 
 ## Build Conda Environment 
 

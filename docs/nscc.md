@@ -212,6 +212,19 @@ add `os.environ['NCCL_SOCKET_IFNAME'] = 'enp1s0f1'` in your Python file. If you 
 environment variable will be `GLOO_SOCKET_IFNAME`. This is to force PyTorch use InfiniBand for communication. Otherwise,
 the program will be stuck at initialization based on my test.
 
-## Dataset
+## Dataset and Transfer files
 
 The ImageNet dataset is placed at `/scratch/users/nus/e0575577/ImageNet` if you are using the shared account.
+
+Maybe you can find other prepared dataset around this path.
+
+**Transfer files**
+
+You can use scp or git clone command, FileZilla or WinSCP, a visible tool, to transfer files.
+
+```shell
+# scp command
+# tested in Git Bash on Windows10
+scp G:/globus_share/xxx.tar your_account@aspire.nscc.sg:/your_path/imagenet-tar
+```
+

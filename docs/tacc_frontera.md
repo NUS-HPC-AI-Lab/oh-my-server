@@ -247,8 +247,6 @@ You need use id -u, to find your user ID, and change above 871009 to it.
 
 ## DALI
 
-(Still have bug '[/opt/dali/dali/util/nvml.h:226] CPU affinity requested by user or recommended by nvml setting does not meet allowed affinity for given DALI thread. Use taskset tool to check allowed affinity', I'm communicating with the administer and will fix it soon)
-
 NVIDIA DALI can accelerate data loading and pre-processing using GPU rather than CPU, although with GPU memory tradeoff. 
 
 It can also avoid some potential conflicts between MPI libraries and Horovod on some GPU clusters.  
@@ -267,7 +265,6 @@ source ~/python-env/cuda110-home/bin/activate
 module load intel/18.0.5 impi/18.0.5
 module load cuda/11.0 cudnn nccl
 
-source ~/python-env/cuda10-home/bin/activate
 
 # install Pytorch, example 1.7.1
 pip install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html --force-reinstall

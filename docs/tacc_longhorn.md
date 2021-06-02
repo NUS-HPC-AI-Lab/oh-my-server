@@ -3,8 +3,10 @@
 - [Build Conda Environment ](#build-conda-environment )
 - [Common Commands](#common-commands)
 - [Job Script Example](#job-script-example)
-- [Dataset](#dataset)
+- [Dataset and Transfer files](#dataset-and-transfer-files)
 - [Large Scale Experiment](#large-scale-experiment)
+- [DALI](#dali)
+- [Question Ticket](#question-ticket)
 
 ## Build Conda Environment 
 
@@ -31,6 +33,13 @@ scancel job_ID
 
 # display estimated start time for job
 squeue --start -j job_ID
+
+# view loaded module
+# module related commands need at computing node
+module list
+
+# view avail module
+module available
 
 # active your conda environment
 # you need run it after you login in computing nodes everytime
@@ -79,18 +88,34 @@ You should use ibrun instead of mpirun or mpiexec here, and -np means total GPU 
 
 Note: Although in Longhorn tutorial, they use "#SBATCH -A myproject       # Allocation name", you can actually delete it. If you incorrect set it, you will meet permission error when submit job.
 
-## Dataset
+## Dataset and Transfer files
+
+**Dataset**
 
 ```shell
 cp /scratch/00946/zzhang/data/imagenet-1k.tar /your/path
 tar xf imagenet-1k.tar
+# TFRecord format file
+/scratch/07801/nusbin20/imagenet-tar/ILSVRC2012_1k_TFRecord.tar 
 ```
 
 You can get a prepared ImageNet-1K (ILSVRC2012) use above command.
 
 Maybe you can find other prepared dataset around this path.
 
+**Transfer files**
+
+You can use scp or git clone command,  or WinSCP, a visible tool can input TACC token, to transfer files.
+
+```shell
+# scp command
+# tested in Git Bash on Windows10
+scp G:/your_path/xxx.tar your_account@longhorn.tacc.utexas.edu:/your_path/imagenet-tar
+```
+
 ## Large Scale Experiment
+
+(You can also consider DALI rather than this part)
 
 If a job uses many nodes (eg. 32 nodes with 128 GPUs) and reads large dataset(eg. ImageNet) directly from the hard disk, it will cause huge IO pressure on the file system, which may cause the job to be killed by the system : (
 
@@ -136,3 +161,49 @@ The data in /tmp will be automatically deleted when job finished, which is locat
 --train-dir=/tmp/imagenet/ILSVRC2012_img_train/
 --val-dir=/tmp/imagenet/ILSVRC2012_img_val/
 ```
+
+## DALI
+
+NVIDIA DALI can accelerate data loading and pre-processing using GPU rather than CPU, although with GPU memory tradeoff. 
+
+It can also avoid some potential conflicts between MPI libraries and Horovod on some GPU clusters.  
+
+**Install**
+
+```shell
+conda install dali
+# because longhorn is Power architecture, we cannot use following command as other cluster.
+# pip install --extra-index-url https://developer.download.nvidia.com/compute/redist --upgrade nvidia-dali-cuda110
+```
+
+**Usage**
+
+You need replace default PyTorch dataloader with dali_dataloader, I provide a PyTorch DALI example using ImageNet-1k at [here](https://github.com/NUS-HPC-AI-Lab/LARS-ImageNet-PyTorch). This example has been tested with nvidia-dali-cuda110, maybe it needs some changes if you use it with Longhorn CUDA10 and Power architecture.
+
+DALI requires data in *TFRecord format* in the following structure:
+
+```
+train-recs 'path/train/*' 
+val-recs 'path/validation/*' 
+train-idx 'path/idx_files/train/*' 
+val-idx 'path/idx_files/validation/*' 
+```
+
+On longhorn, if you want use ImageNet-1k TFRecord data, you can directly use
+
+data-dir=/scratch/07801/nusbin20/ILSVRC2012_1k_TFRecord/
+
+```shell
+# TFRecord format tar file
+/scratch/07801/nusbin20/imagenet-tar/ILSVRC2012_1k_TFRecord.tar 
+```
+
+About the parameters on DALI:
+
+- *prefetch_queue_depth* and *num_threads*  might also be something to explore, as it can speed up your loading a lot, with some memory tradeoff.
+- *last_batch_policy*  you probably want PARTIAL on validation, and DROP during training: https://docs.nvidia.com/deeplearning/dali/user-guide/docs/plugins/pytorch_plugin_api.html?highlight=last_batch_policy, just as I set in above example link.
+- *device*  Above example link use device="mixed/gpu", for ImageNet-1k and GPU with 16GB, default PyTorch dataloader allows batchsize 128, while DALI can only use batchsize 64. If you set device="mixed/gpu" to "cpu", it won't need extra GPU memory, however copying directly to gpu makes the loading much faster.
+
+## Question Ticket
+
+If you have some specific questions, you can sent them to [TACC Frontera Help Desk](https://frontera-portal.tacc.utexas.edu/user-guide/help/).

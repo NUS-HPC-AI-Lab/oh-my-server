@@ -1,11 +1,14 @@
 # TACC-Frontera
 
-- [Build Conda Environment ](#build-conda-environment )
+- [Build Virtualenv Environment ](#build-virtualenv-environment )
 - [Common Commands](#common-commands)
 - [Job Script Example](#job-script-example)
-- [Dataset](#dataset)
+- [Horovod Gloo](#horovod_gloo)
+- [Dataset and Transfer files](#dataset-and-transfer-files)
 - [Large Scale Experiment](#large-scale-experiment)
+- [DALI](#dali)
 - [Potential Error](#potential-error)
+- [Question Ticket](#question-ticket)
 ## Build Virtualenv Environment 
 
 According to the TACC staff's personal instruction, we should **use Python virtualenv instead of Conda** to build the environment on TACC-Frontera. 
@@ -49,9 +52,7 @@ pip install torch==1.5.1+cu101 torchvision==0.6.1+cu101 -f https://download.pyto
 HOROVOD_CUDA_HOME=$TACC_CUDA_DIR HOROVOD_NCCL_HOME=$TACC_NCCL_DIR  CC=gcc HOROVOD_GPU_ALLREDUCE=NCCL HOROVOD_GPU_BROADCAST=NCCL HOROVOD_WITHOUT_TENSORFLOW=1 HOROVOD_WITH_PYTORCH=1 HOROVOD_WITHOUT_MXNET=1 pip install horovod --no-cache-dir --force-reinstall
 ```
 
-After testing, I **strongly not recommended to use Horovod on TACC-Frontera** because there is a serious incompatibility with the environment.
-
-Please **use torch.distributed for distribution**.
+**Default PyTorch dataloader does not work if you use Horovod for distribution directly** (maybe because the specific MPI), please **use torch.distributed, Horovod Gloo, or Horovod + DALI** (please refer to DALI or Horovod Gloo section).
 
 ## Common Commands
 
@@ -81,6 +82,7 @@ scancel job_ID
 squeue --start -j job_ID
 
 # view loaded module
+# module related commands need at computing node
 module list
 
 # view avail module
@@ -133,7 +135,51 @@ Note: Although in Frontera tutorial, they use "#SBATCH -A myproject       # Allo
 
 From 6 April 2021, for Frontera jobs, a new queue named *small* has been created specifically for one and two node jobs. Jobs of one or two nodes that will run for up to 48 hours should be submitted to the *small* queue. The *normal* queue now has a lower limit of 3 nodes for all jobs. This should improve the turnaround time for jobs in the *normal* queue and small jobs in the *small* queue.
 
-## Dataset
+## Horovod Gloo
+
+```
+#!/bin/sh
+
+#SBATCH -J myjob           # Job name
+#SBATCH -o myjob-t.o%j       # Name of stdout output file
+#SBATCH -e myjob-t.e%j       # Name of stderr error file
+#SBATCH -p rtx            # Queue (partition) name
+#SBATCH -N 2               # Total # of nodes (must be 1 for serial)
+#SBATCH -n 8               # Total # of mpi tasks (should be 1 for serial)
+#SBATCH -t 00:30:00        # Run time (hh:mm:ss)
+
+pwd
+date
+
+source ~/python-env/cuda10-home/bin/activate
+
+module load intel/18.0.5 impi/18.0.5
+module load cuda/10.1 cudnn nccl
+
+cd /file_path/
+
+export PMI_NO_PREINITIALIZE=1  # avoid warnings on fork
+# unset CSCS_CUSTOM_ENV PELOCAL_PRGENV PROFILEREAD RCLOCAL_PRGENV RCLOCAL_BASEOPTS
+
+# 4 means $SLURM_NTASKS_PER_NODE
+for node in $(scontrol show hostnames); do
+   HOSTS="$HOSTS$node:4,"
+done
+HOSTS=${HOSTS%?}  # trim trailing comma
+echo HOSTS $HOSTS
+
+horovodrun -np $SLURM_NTASKS -H $HOSTS --gloo --network-interface ib0 \
+   --start-timeout 120 --gloo-timeout-seconds 120 \
+python you_file.py  \
+--epochs 90 \
+--model resnet50
+```
+
+Horovod Gloo works without using MPI, so you can use default PyTorch dataloader as on other clusters.
+
+## Dataset and Transfer files
+
+**Dataset**
 
 ```shell
 cp /scratch1/00946/zzhang/imagenet/imagenet-1k.tar /your/path
@@ -147,7 +193,19 @@ You can get a prepared ImageNet-1K (ILSVRC2012) use above command.
 
 Maybe you can find other prepared dataset around this path.
 
+**Transfer files**
+
+You can use scp or git clone command, or WinSCP, a visible tool can input TACC token, to transfer files.
+
+```shell
+# scp command
+# tested in Git Bash on Windows10
+scp G:/globus_share/xxx.tar your_account@frontera.tacc.utexas.edu:/your_path/imagenet-tar
+```
+
 ## Large Scale Experiment
+
+(You can also consider DALI rather than this part)
 
 If a job uses many nodes (eg. 32 nodes with 128 GPUs) and reads large dataset(eg. ImageNet) directly from the hard disk, it will cause huge IO pressure on the file system, which may cause the job to be killed by the system : (
 
@@ -188,6 +246,69 @@ ibrun -np 8 LD_PRELOAD=/work/00410/huang/share/wrapper.so python pytorch_imagene
 ```
 
 You need use id -u, to find your user ID, and change above 871009 to it. 
+
+## DALI
+
+NVIDIA DALI can accelerate data loading and pre-processing using GPU rather than CPU, although with GPU memory tradeoff. 
+
+It can also avoid some potential conflicts between MPI libraries and Horovod on some GPU clusters.  
+
+**Install**
+
+Build DALI with Pytorch, Horovod and CUDA 11.0. 
+
+```shell
+# login in computing nodes and virtualenv 
+idev -p rtx-dev -N 1 -n 4 -t 02:00:00
+
+source ~/python-env/cuda110-home/bin/activate
+
+# load modules (cannot use default intel/19 impi/19)
+module load intel/18.0.5 impi/18.0.5
+module load cuda/11.0 cudnn nccl
+
+
+# install Pytorch, example 1.7.1
+pip install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html --force-reinstall
+
+# bulid Horovod, maybe spend ten minutes 
+HOROVOD_CUDA_HOME=$TACC_CUDA_DIR HOROVOD_NCCL_HOME=$TACC_NCCL_DIR  CC=gcc HOROVOD_GPU_ALLREDUCE=NCCL HOROVOD_GPU_BROADCAST=NCCL HOROVOD_WITHOUT_TENSORFLOW=1 HOROVOD_WITH_PYTORCH=1 HOROVOD_WITHOUT_MXNET=1 pip install horovod --no-cache-dir --force-reinstall
+
+# install dali
+pip install --extra-index-url https://developer.download.nvidia.com/compute/redist --upgrade nvidia-dali-cuda110
+# pip install --extra-index-url https://developer.download.nvidia.com/compute/redist --upgrade nvidia-dali-cuda100
+
+# --user leads to different packages location 
+# export PYTHONPATH=~/.local/lib/python3.7/site-packages
+```
+
+**Usage**
+
+You need replace default PyTorch dataloader with dali_dataloader, I provide a PyTorch DALI example using ImageNet-1k at [here](https://github.com/NUS-HPC-AI-Lab/LARS-ImageNet-PyTorch).This example has been tested with nvidia-dali-cuda110, maybe it needs some changes if you use it with CUDA10.
+
+DALI requires data in *TFRecord format* in the following structure:
+
+```
+train-recs 'path/train/*' 
+val-recs 'path/validation/*' 
+train-idx 'path/idx_files/train/*' 
+val-idx 'path/idx_files/validation/*' 
+```
+
+On longhorn, if you want use ImageNet-1k TFRecord data, you can directly use
+
+data-dir=/scratch1/07801/nusbin20/ILSVRC2012_1k_TFRecord/
+
+```shell
+# TFRecord format tar file
+/scratch1/07801/nusbin20/imagenet-tar/ILSVRC2012_1k_TFRecord.tar 
+```
+
+About the parameters on DALI:
+
+- *prefetch_queue_depth* and *num_threads*  might also be something to explore, as it can speed up your loading a lot, with some memory tradeoff.
+- *last_batch_policy*  you probably want PARTIAL on validation, and DROP during training: https://docs.nvidia.com/deeplearning/dali/user-guide/docs/plugins/pytorch_plugin_api.html?highlight=last_batch_policy, just as I set in above example link.
+- *device*  Above example link use device="mixed/gpu", for ImageNet-1k and GPU with 16GB, default PyTorch dataloader allows batchsize 128, while DALI can only use batchsize 64. If you set device="mixed/gpu" to "cpu", it won't need extra GPU memory, however copying directly to gpu makes the loading much faster.
 
 ## Potential Error
 
@@ -232,11 +353,6 @@ for i in range(model_parallel_size):
         _DATA_PARALLEL_GROUP = group
 ```
 
+## Question Ticket
 
-
-
-
-
-
-
-
+If you have some specific questions, you can sent them to [TACC Longhorn Help Desk](https://portal.tacc.utexas.edu/user-guides/longhorn#help-desk).

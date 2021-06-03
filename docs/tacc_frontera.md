@@ -253,6 +253,8 @@ NVIDIA DALI can accelerate data loading and pre-processing using GPU rather than
 
 It can also avoid some potential conflicts between MPI libraries and Horovod on some GPU clusters.  
 
+On TACC-Frontera, DALI only works for one node with 4GPUs, if use Pytorch + Horovod, I guess because its specific MPI : ( . When use mutil nodes, it still doesn't work.
+
 **Install**
 
 Build DALI with Pytorch, Horovod and CUDA 11.0. 

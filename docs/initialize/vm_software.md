@@ -1,6 +1,6 @@
 # Software for Single VM
 
-I use CentOS for my personal cloud server, thus the commands will be a bit difference if you using other operating system. For software you wish to make available for all users, I would recommend you to put them under `/opt/apps`. As I will be using `Lmod` to manage all the modules, I build all the software from source. If you wish to install directly, you can just use `yum install`.
+I use CentOS for my personal cloud server, thus the commands will be a bit different if you using other operating system. For software you wish to make available for all users, I would recommend you to put them under `/opt/apps`. As I will be using `Lmod` to manage all the modules, I build all the software from source. If you wish to install directly, you can just use `yum install`.
 
 ## Table Of Contents
 
@@ -164,7 +164,7 @@ sudo make install
 
 ## OpenMPI
 
-OpenMPI lets you spawn mutltiple processes simultaneously for distributed job. As my VM has too few cores to make OpenMPI effective. I didn't not install it.
+OpenMPI lets you spawn mutltiple processes simultaneously for distributed job. As my VM has too few cores to make OpenMPI effective. I didn't not install it. You may refer to this [guide](https://github.com/openucx/ucx/wiki/OpenMPI-and-OpenSHMEM-installation-with-UCX) if you want to build OpenMPI with UCX.
 
 ## Node.js
 

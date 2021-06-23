@@ -67,10 +67,7 @@ To receive notification when your job status changes, you can add the following 
 If you want to debug your code or run many short experiments with exclusive GPU resources, you can launch a jupyter lab
 on the NSCC server. The procedure is as follows:
 
-
-<p align="center">
-  <img src="https://github.com/FrankLeeeee/oh-my-server/blob/main/figures/NSCC/NSCC_jupyter.png?raw=true" width="60%" alt="jupyter workflow">
-</p>
+![](../doc_figures/nscc/NSCC_jupyter.png)
 
 1. Setup NSCC VPN for your [Mac](https://help.nscc.sg/vpnmac/) or [Windows](https://help.nscc.sg/vpnmicrosoft/). You
    should not login via the school VPN as they do not provide outgoing internet access. The NSCC VPN allows you to
@@ -207,10 +204,10 @@ python <YOUR_SCRIPT>
 ```
 
 For PyTorch users, you can use `horovod` for cross-node communication. However, if you are using `torch.distributed`,
-you need to specify the communication interface by `export NCCL_SOCKET_IFNAME=enp1s0f1` or
-add `os.environ['NCCL_SOCKET_IFNAME'] = 'enp1s0f1'` in your Python file. If you are using `gloo` backend, the
-environment variable will be `GLOO_SOCKET_IFNAME`. This is to force PyTorch use InfiniBand for communication. Otherwise,
-the program will be stuck at initialization based on my test.
+you need to specify the communication interface by setting environment variables `NCCL_SOCKET_IFNAME`. Currently, `enp1s0f1`
+is for InfiniBand. You can do `NCCL_SOCKET_IFNAME=enp1s0f1 python your_script.py` or add `os.environ['NCCL_SOCKET_IFNAME'] = 'enp1s0f1'` 
+in your Python file. If you are using `gloo` backend, the environment variable will be `GLOO_SOCKET_IFNAME`. This is to 
+force PyTorch use InfiniBand for communication. Otherwise, the program will be stuck at initialization based on my test.
 
 ## Dataset and Transfer files
 

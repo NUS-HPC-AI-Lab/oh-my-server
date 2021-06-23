@@ -38,7 +38,7 @@ You can access the $SCRATCH file system and submit jobs from here. Cannot connec
 
 You can go to [https://account.cscs.ch](https://account.cscs.ch/) to check the <project ID> and remain quota hours, as shown below
 
-![](docs_figure/cscs/cscs_project_information.jpg)
+![](../doc_figures/cscs/cscs_project_information.jpg)
 
 The quota here is the whole lab quota rather than your current account, so the resources is very limited, please be careful and economical. One node h means occupy one node (1 P100 GPU) one hour, so we need balance the job walltime and requested resources. In my test, train ImageNet-1k using PyTorch with 90 epochs need about two or three hundreds node h at a time.
 
@@ -52,13 +52,13 @@ For interactive usage to debug, unlike other cluster using command, You can acce
 
 2. Right click 'Start My Server' and select 'Open link in new tab' 
 
-   ![](docs_figure/cscs/jupyter_step1.jpg)
+   ![](../doc_figures/cscs/jupyter_step1.jpg)
 
 3. Select nodes and duration you need.
 
    Each node has only one P100 GPU, and request 4 or more nodes here often fail, please consider use job.slurm for large test.
 
-   ![](docs_figure/cscs/jupyter_step2.jpg)
+   ![](../doc_figures/cscs/jupyter_step2.jpg)
 
 4. Cancel interactive resources usage
 
@@ -66,7 +66,7 @@ For interactive usage to debug, unlike other cluster using command, You can acce
 
    Click the refresh button in the upper left corner of the previous page, then you can see the 'Stop My Server'. Click it and refresh again, if it shows as step 2, the job has been successfully terminated.
 
-   ![](docs_figure/cscs/jupyter_step3.jpg)
+   ![](../doc_figures/cscs/jupyter_step3.jpg)
 
 **Build Conda Environment**
 
@@ -237,7 +237,7 @@ You can use first transfer them to $HOME, then cp them to \$SCRATCH, or use git 
 
 You need install the globus personal client on your local machine and set visible path.
 
-![](docs_figure/cscs/globus.jpg)
+![](../doc_figures/cscs/globus.jpg)
 
 
 

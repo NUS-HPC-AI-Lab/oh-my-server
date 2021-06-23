@@ -6,14 +6,16 @@ personal debugging experiences on different HPC systems as well.
 ## Quick Reference
 
 - Get Started
-    - [Understanding Your System](docs/sysinfo.md)
-    - [Hardware Keywords](docs/hardware_keywords.md)
+    - [Understanding Your System](docs/get_started/sysinfo.md)
+    - [Hardware Keywords](docs/get_started/hardware_keywords.md)
 - Initialization
-    - [Initializing Your Server](docs/vm_software.md)
-    - [Initializing Your Cluster](docs/cluster_software.md)
+    - [Initializing Your Server](docs/initialize/vm_software.md)
+    - [Initializing Your Cluster](docs/initialize/cluster_software.md)
 - HPC System Notes
-    - [NSCC AI System](docs/nscc.md)
-    - [TACC Longhorn](docs/tacc_longhorn.md)
-    - [TACC Frontera](docs/tacc_frontera.md)
-    - [CSCS](docs/cscs.md)
+    - [NSCC AI System](docs/hpc_system_notes/nscc.md)
+    - [TACC Longhorn](docs/hpc_system_notes/tacc_longhorn.md)
+    - [TACC Frontera](docs/hpc_system_notes/tacc_frontera.md)
+    - [CSCS](docs/hpc_system_notes/cscs.md)
+- Resources
+    - [Awesome Deep Learning Libraries](docs/resources/dl_libraries.md)
 

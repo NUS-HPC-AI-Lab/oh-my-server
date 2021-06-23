@@ -27,9 +27,14 @@ df -h /home
 # CPU
 lscpu
 
-# GPU
+# check GPU status
 nvidia-smi
+
+# check CUDA/nvcc version
 nvcc --version
+
+# check GPU topology
+nvidia-smi topo -m
 
 # environment variable
 env
@@ -107,7 +112,7 @@ cat /proc/version
 
 ## Scripts
 
-Author-Kit provides an easy-to-use script to gather system information on the machine.
+`Author-Kit` provides an easy-to-use script to gather system information on the machine.
 
 ```shell
 git clone https://github.com/SC-Tech-Program/Author-Kit

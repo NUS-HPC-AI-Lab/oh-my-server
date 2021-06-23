@@ -177,6 +177,22 @@ python you_file.py  \
 
 Horovod Gloo works without using MPI, so you can use default PyTorch dataloader as on other clusters.
 
+
+## Network Interface
+
+When running PyTorch distributed, you can specify the network interface for communication by setting the
+environment variables `NCCL_SOCKET_IFNAME` or `GLOO_SOCKET_IFNAME` depending on the backend of your choice.
+For Frontera, you can set it to be `ib0`. You can check the available network interfaces by the command `ifconfig`
+or use [PyRoute2](https://github.com/svinota/pyroute2) if this command is not available. You can also get 
+the host address in this way as well.
+
+```python
+from pyroute2 import NDB
+
+ndb = NDB(log='debug')
+print(ndb.addresses.summary())
+```
+
 ## Dataset and Transfer files
 
 **Dataset**

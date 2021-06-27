@@ -12,6 +12,7 @@ personal debugging experiences on different HPC systems as well.
     - [Initializing Your Server](docs/initialize/vm_software.md)
     - [Initializing Your Cluster](docs/initialize/cluster_software.md)
 - HPC System Notes
+    - [General Notes](docs/hpc_system_notes/general.md)
     - [NSCC AI System](docs/hpc_system_notes/nscc.md)
     - [TACC Longhorn](docs/hpc_system_notes/tacc_longhorn.md)
     - [TACC Frontera](docs/hpc_system_notes/tacc_frontera.md)

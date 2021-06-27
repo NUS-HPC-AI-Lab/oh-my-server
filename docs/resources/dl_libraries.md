@@ -3,9 +3,11 @@
 I have listed some awesome libraries which I found useful for most machine learning practices. These libraries can make 
 things easier and boost your productivity.
 
+
 ## General
 
 - [DeepLearningExamples](https://github.com/NVIDIA/DeepLearningExamples): Source code for many deep learning models by Nvidia
+
 
 ## Computer Vision
 
@@ -15,6 +17,7 @@ things easier and boost your productivity.
 - [MMAction2](https://github.com/open-mmlab/mmaction2): OpenMMLab's Next Generation Video Understanding Toolbox and Benchmark
 - [MMSegmentation](https://github.com/open-mmlab/mmsegmentation): OpenMMLab Semantic Segmentation Toolbox and Benchmark.
 - [OpenSelfSup](https://github.com/open-mmlab/OpenSelfSup): Self-Supervised Learning Toolbox and Benchmark
+
 
 ## Natural Language Processing
 
@@ -41,6 +44,7 @@ things easier and boost your productivity.
 - [TorchPipe](https://github.com/kakaobrain/torchgpipe): A GPipe implementation in PyTorch
 - [PowerSGD Communication Hook](https://pytorch.org/docs/stable/ddp_comm_hooks.html): PowerSGD (Vogels et al., NeurIPS 2019) is a gradient compression algorithm, which can provide very high compression rates and accelerate bandwidth-bound distributed training. 
 - [Accelerate](https://github.com/huggingface/accelerate): A simple way to train and use PyTorch models with multi-GPU, TPU, mixed-precision
+- [lightseq](https://github.com/bytedance/lightseq): LightSeq: A High Performance Library for Sequence Processing and Generation
 
 
 ## Large-Scale Distributed Training
@@ -48,6 +52,7 @@ things easier and boost your productivity.
 - [Megatron](https://github.com/NVIDIA/Megatron-LM): Ongoing research training transformer language models at scale, including: BERT & GPT-2
 - [DeepSpeed](https://github.com/microsoft/deepspeed): DeepSpeed is a deep learning optimization library that makes distributed training easy, efficient, and effective.
 - [Ray](https://github.com/ray-project/ray): An open source framework that provides a simple, universal API for building distributed applications. Ray is packaged with RLlib, a scalable reinforcement learning library, and Tune, a scalable hyperparameter tuning library.
+
 
 ## Utilities
 

@@ -17,6 +17,7 @@ personal debugging experiences on different HPC systems as well.
     - [TACC Longhorn](docs/hpc_system_notes/tacc_longhorn.md)
     - [TACC Frontera](docs/hpc_system_notes/tacc_frontera.md)
     - [CSCS](docs/hpc_system_notes/cscs.md)
+    - [NUS Apollo](docs/hpc_system_notes/nus_apollo.md)
 - Resources
     - [Awesome Deep Learning Libraries](docs/resources/dl_libraries.md)
 

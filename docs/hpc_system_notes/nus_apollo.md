@@ -14,6 +14,32 @@ Connect to SoC VPN then you can use ssh to connect to the lab machine directly.
 ssh USERNAME@hpc-ai-01.d2.comp.nus.edu.sg
 ```
 
+## :heavy_exclamation_mark: Download Rules
+
+:heavy_exclamation_mark:
+:heavy_exclamation_mark:
+:heavy_exclamation_mark:
+**Please read this section before use**
+
+
+If you want to download a large dataset, please limit your download rate so that it will not perform DDOS to the network. 
+You can use trickle to specify how fast you download your dataset. In general, you should limit your download rate to 10 MB/s to play safe. 
+We use **`trickle`** to control the download rate.
+
+Some options of trickle are: 
+- `-s`: run in standalone mode 
+- `-u`: upload rate in KB/s 
+- `-d`: download rate in KB/s 
+
+
+```bash
+# this will download CIFAR10 dataset at around 4 MB/s
+trickle -s  -u 1024 -d 4096 wget https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
+
+# this will download CIFAR10 dataset at around 2 MB/s
+trickle -s  -u 1024 -d 2048 wget https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
+```
+
 ## Software Stack
 
 ### Environment Module

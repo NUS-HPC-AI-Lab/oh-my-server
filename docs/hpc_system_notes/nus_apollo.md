@@ -40,6 +40,15 @@ trickle -s  -u 1024 -d 4096 wget https://www.cs.toronto.edu/~kriz/cifar-10-pytho
 trickle -s  -u 1024 -d 2048 wget https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz
 ```
 
+## Storage
+
+We store datasets which are commonly used by many users in `/data/common`.
+If you feel that your dataset is common but no in `/data/common`, you can notify the system admin to download this dataset for you or move the downloaded dataset to `data/common`.
+
+Please store large files (e.g. personal datasets, model weights) in `/data/personal`. You need to create your own directory.
+
+
+
 ## Software Stack
 
 ### Environment Module

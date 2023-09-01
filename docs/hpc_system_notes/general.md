@@ -70,3 +70,16 @@ print(ndb.addresses.summary())
 For example, you can find `ib0` in the list on NSCC. It means InfiniBand and you can set `NCCL_SOCKET_IFNAME=ib0` in 
 your script. Base on test, if you do not set this environment variable, your PyTorch initialization will stuck.
 
+## Use Proxyjump to directly connect to the compute node (requires having a job running on the compute node)
+
+```
+Host Computenode_hostname
+  HostName Computenode_hostname
+  User username
+  ProxyJump loginnode_hostname
+  ServerAliveInterval 60
+
+Host aspire2a.nus.edu.sg
+  HostName loginnode_hostname
+  User username
+```

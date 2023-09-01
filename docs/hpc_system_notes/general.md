@@ -73,13 +73,13 @@ your script. Base on test, if you do not set this environment variable, your PyT
 ## Use Proxyjump to directly connect to the compute node (requires having a job running on the compute node)
 
 ```
-Host Computenode_hostname
-  HostName Computenode_hostname
+Host computenode_hostname
+  HostName computenode_hostname
   User username
   ProxyJump loginnode_hostname
   ServerAliveInterval 60
 
-Host aspire2a.nus.edu.sg
+Host loginnode_hostname
   HostName loginnode_hostname
   User username
 ```
